@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Mortgage Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Existing HTML content remains the same -->
+    <div id="app" class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-800 mb-4">Complete Mortgage Calculator</h1>
+            <p class="text-gray-600">Your comprehensive mortgage planning tool</p>
+        </header>
+
+        <!-- Additional Buttons for Policies and Help -->
+        <div class="flex justify-center space-x-4 mb-4">
+            <button onclick="openModal('privacyPolicy')" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Privacy Policy</button>
+            <button onclick="openModal('termsCondition')" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Terms of Condition</button>
+            <button onclick="openModal('helpGuide')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Help & Guide</button>
+        </div>
+
+        <!-- Existing navigation and calculator content -->
+        <nav class="mb-8">
+            <!-- ... (previous navigation code) ... -->
+        </nav>
+
+        <main id="calculatorContainer" class="bg-white shadow-lg rounded-lg p-8">
+            <!-- Calculator content will be dynamically loaded here -->
+        </main>
+
+        <div id="resultsChart" class="mt-8 hidden">
+            <canvas id="mortgageChart" class="w-full h-64"></canvas>
+        </div>
+    </div>
+
+    <!-- Modals for Policies and Help -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div id="modalContent" class="bg-white p-8 rounded-lg max-w-2xl max-h-[80vh] overflow-y-auto relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl font-bold text-gray-600 hover:text-gray-900">&times;</button>
+            <div id="modalInnerContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ... (previous JavaScript code remains the same) ...
+
+        // Modal Functionality
+        function openModal(type) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalInnerContent');
+            
+            // Set content based on type
+            switch(type) {
+                case 'privacyPolicy':
+                    content.innerHTML = `
+                        <h2 class="text-3xl font-bold mb-6 text-blue-800">Privacy Policy</h2>
+                        <div class="space-y-4 text-gray-700">
+                            <h3 class="text-xl font-semibold">1. Information We Collect</h3>
+                            <p>Our Mortgage Calculator collects only the numerical data you input for calculations. No personal identifying information is stored or shared.</p>
+                            
+                            <h3 class="text-xl font-semibold">2. Data Usage</h3>
+                            <p>The data you enter is used solely for real-time mortgage calculations and is not saved or transmitted after your session.</p>
+                            
+                            <h3 class="text-xl font-semibold">3. Data Protection</h3>
+                            <p>All calculations are performed client-side in your browser. No data is sent to our servers or stored permanently.</p>
+                            
+                            <h3 class="text-xl font-semibold">4. Cookies</h3>
+                            <p>We do not use cookies or track your browsing activity on this calculator.</p>
+                            
+                            <h3 class="text-xl font-semibold">5. Third-Party Services</h3>
+                            <p>The calculator uses Chart.js and Tailwind CSS for visualization and styling, but does not share your data with these services.</p>
+                        </div>
+                    `;
+                    break;
+                case 'termsCondition':
+                    content.innerHTML = `
+                        <h2 class="text-3xl font-bold mb-6 text-blue-800">Terms of Condition</h2>
+                        <div class="space-y-4 text-gray-700">
+                            <h3 class="text-xl font-semibold">1. Calculator Purpose</h3>
+                            <p>This Mortgage Calculator is designed to provide estimates and should not be considered financial advice. Always consult with a professional financial advisor.</p>
+                            
+                            <h3 class="text-xl font-semibold">2. Accuracy Disclaimer</h3>
+                            <p>Calculations are approximations based on the inputs you provide. Actual mortgage terms may vary with lenders.</p>
+                            
+                            <h3 class="text-xl font-semibold">3. User Responsibility</h3>
+                            <p>Users are responsible for verifying all calculations and inputs. We do not guarantee the accuracy of results.</p>
+                            
+                            <h3 class="text-xl font-semibold">4. No Liability</h3>
+                            <p>We are not responsible for any financial decisions made based on calculator results.</p>
+                            
+                            <h3 class="text-xl font-semibold">5. Usage Restrictions</h3>
+                            <p>This calculator is for personal, non-commercial use. Redistribution or commercial use is prohibited.</p>
+                        </div>
+                    `;
+                    break;
+                case 'helpGuide':
+                    content.innerHTML = `
+                        <h2 class="text-3xl font-bold mb-6 text-blue-800">Help & Guide</h2>
+                        <div class="space-y-6 text-gray-700">
+                            <section>
+                                <h3 class="text-xl font-semibold">How to Use the Mortgage Calculator</h3>
+                                <ol class="list-decimal pl-5 space-y-2">
+                                    <li>Select the type of calculation you want to perform from the navigation menu.</li>
+                                    <li>Fill in all the required fields with accurate information.</li>
+                                    <li>Click the "Calculate" button to see your results.</li>
+                                    <li>Review the detailed breakdown and chart visualization.</li>
+                                </ol>
+                            </section>
+
+                            <section>
+                                <h3 class="text-xl font-semibold">Frequently Asked Questions (FAQ)</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-bold">Q: Are my calculations saved?</h4>
+                                        <p>A: No, all calculations are temporary and not stored.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Q: Is this calculator free?</h4>
+                                        <p>A: Yes, this is a free tool for personal use.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Q: How accurate are the calculations?</h4>
+                                        <p>A: Calculations are estimates. Actual terms may vary with lenders.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold">Q: Do I need to create an account?</h4>
+                                        <p>A: No account is required. Use the calculator anonymously.</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-xl font-semibold">Calculator Types Explained</h3>
+                                <ul class="list-disc pl-5 space-y-2">
+                                    <li><strong>Basic Mortgage:</strong> Calculate monthly payments for a standard mortgage.</li>
+                                    <li><strong>Refinance:</strong> Compare current and potential new mortgage rates.</li>
+                                    <li><strong>Loan Comparison:</strong> Compare two different loan scenarios.</li>
+                                    <li><strong>Affordability:</strong> Determine how much home you can afford.</li>
+                                    <li><strong>Extra Payment:</strong> See the impact of additional monthly payments.</li>
+                                    <li><strong>ARM Comparison:</strong> Understand adjustable-rate mortgage changes.</li>
+                                    <li><strong>Closing Costs:</strong> Estimate various closing cost components.</li>
+                                </ul>
+                            </section>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            overlay.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.classList.add('hidden');
+        }
+
+        // Optional: Close modal when clicking outside
+        document.getElementById('modalOverlay').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
